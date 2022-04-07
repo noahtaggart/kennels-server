@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_animals, get_single_animal, get_all_customers, get_single_customer,  get_customers_by_email, get_animals_by_location, get_employees_by_location, get_animals_by_status
+from views import get_all_animals, get_single_animal, get_all_customers, get_single_customer,  get_customers_by_email, get_animals_by_location, get_employees_by_location, get_animals_by_status, delete_animal
 
 
 # Here's a class. It inherits from another class.
@@ -117,6 +117,20 @@ class HandleRequests(BaseHTTPRequestHandler):
         
 
         self.wfile.write(response.encode())
+        
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "animals":
+            delete_animal(id)
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
 
 
