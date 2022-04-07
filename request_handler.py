@@ -1,6 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from views import get_all_animals, get_single_animal, get_all_employees, get_single_employee, get_all_locations, get_single_location, get_all_customers, get_single_customer, create_animal, create_location
+from views import get_all_animals, get_single_animal, get_all_employees, get_single_employee, get_all_locations, get_single_location, get_all_customers, get_single_customer, create_animal, create_location, create_employee, create_customer, delete_animal, delete_customer, delete_employee, delete_location
+
 
 # Here's a class. It inherits from another class.
 # For now, think of a class as a container for functions that
@@ -122,9 +123,38 @@ class HandleRequests(BaseHTTPRequestHandler):
             
         if resource == "locations":
             new_resource = create_location(post_body)
+        
+        if resource == "employees":
+            new_resource = create_employee(post_body)
+        
+        if resource == "customers":
+            new_resource = create_customer(post_body)
 
         # Encode the new animal and send in response
         self.wfile.write(f"{new_resource}".encode())
+
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "animals":
+            delete_animal(id)
+            
+        if resource == "customers":
+            delete_customer(id)
+
+        if resource == "employees":
+            delete_employee(id)
+        
+        if resource == "locations":
+            delete_location(id)
+
+        # Encode the new animal and send in response
+        self.wfile.write("".encode())
 
     # Here's a method on the class that overrides the parent's method.
     # It handles any PUT request.
